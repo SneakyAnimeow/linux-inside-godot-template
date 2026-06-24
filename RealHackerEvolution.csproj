@@ -1,0 +1,36 @@
+<Project Sdk="Godot.NET.Sdk/4.7.0">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.JavaScript.LibNode" Version="20.1800.215" />
+    <PackageReference Include="Microsoft.JavaScript.NodeApi" Version="0.9.21" />
+    <PackageReference Include="Microsoft.JavaScript.NodeApi.DotNetHost" Version="0.9.21" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <Target Name="BuildNodeJsPayload" BeforeTargets="BeforeBuild">
+    <Exec Command="bun install &amp;&amp; bun run build" WorkingDirectory="Node/js" />
+  </Target>
+
+  <ItemGroup>
+    <None Include="Node\js\dist\index.cjs" Link="js\index.cjs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Node\js\bios\**\*" Link="js\bios\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Node\js\images\boot\**\*" Link="js\images\boot\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Node\js\images\alpine.iso" Link="js\images\alpine.iso">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Node\js\v86.wasm" Link="js\v86.wasm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

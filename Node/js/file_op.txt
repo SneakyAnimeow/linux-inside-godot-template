@@ -1,0 +1,4 @@
+[2026-06-23T13:05:10.178Z] CREATE_FILE: /new_file.txt
+[2026-06-23T13:05:10.192Z] WRITE: new_file.txt (content: "Hello Host\n")
+[2026-06-23T13:05:10.207Z] RENAME: /new_file.txt -> /moved_file.txt
+[2026-06-23T13:05:10.219Z] DELETE: /moved_file.txt

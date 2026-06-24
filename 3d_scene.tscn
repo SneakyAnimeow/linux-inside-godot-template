@@ -1,0 +1,162 @@
+[gd_scene format=3 uid="uid://c722r6t3axpbx"]
+
+[ext_resource type="Script" uid="uid://bs1gxd8sm3pss" path="res://Scripts/PlayerMovementScript.cs" id="1_35hqx"]
+[ext_resource type="Shader" uid="uid://bh8qy43cg8qkh" path="res://Shaders/sky.gdshader" id="2_sky_shader"]
+[ext_resource type="Shader" uid="uid://dmkt6ubl67vc8" path="res://Shaders/static_grid.gdshader" id="3_static_grid"]
+[ext_resource type="PackedScene" uid="uid://7uc8yhqb55dk" path="res://Models/Display/scene.gltf" id="4_unsly"]
+[ext_resource type="Script" uid="uid://cwy67ctcurpef" path="res://Scripts/ScreenInteract.cs" id="5_screen_script"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("2_sky_shader")
+shader_parameter/grid_color = Color(0.16, 0, 0.25, 1)
+shader_parameter/base_color = Color(0.1, 0, 0.25, 1)
+shader_parameter/line_thickness = 4.4
+shader_parameter/speed = 2.0
+shader_parameter/glow = 4.0
+shader_parameter/edge_blend = 0.19
+shader_parameter/rotation_speed = 4.0
+
+[sub_resource type="Sky" id="Sky_default"]
+sky_material = SubResource("ShaderMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_sky"]
+background_mode = 2
+background_color = Color(0.021306936, 1.0227784e-06, 0.18723503, 1)
+background_energy_multiplier = 0.18
+sky = SubResource("Sky_default")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2hwhs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_static_grid"]
+render_priority = 0
+shader = ExtResource("3_static_grid")
+shader_parameter/line_color = Color(0.16, 0, 0.25, 1)
+shader_parameter/base_color = Color(0.1, 0, 0.25, 1)
+shader_parameter/grid_size = 2.0
+shader_parameter/line_thickness = 0.05
+shader_parameter/glow = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+material = SubResource("ShaderMaterial_static_grid")
+uv2_padding = 0.0
+size = Vector3(50, 1, 50)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cube"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blue"]
+albedo_color = Color(0.08235294, 0.3019608, 0.30588236, 1)
+roughness = 0.22
+roughness_texture_channel = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+material = SubResource("StandardMaterial3D_blue")
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_is7kp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_unsly"]
+size = Vector3(14.3552, 9.9371, 4.8692)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_term"]
+viewport_path = NodePath("MonitorStaticBody3D/TerminalViewport")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_screen"]
+size = Vector3(13.5, 7.32, 0.1)
+
+[node name="3dScene" type="Node3D" unique_id=1752491974]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1398161509]
+environment = SubResource("Environment_sky")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=24780284]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 10, 0)
+visible = false
+shadow_enabled = true
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="." unique_id=999999999]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+visible = false
+size = Vector3(50, 20, 50)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=888888888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+visible = false
+omni_range = 20.0
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=132023595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+physics_material_override = SubResource("PhysicsMaterial_2hwhs")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=753859625]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=915403231]
+gi_lightmap_texel_scale = 10.0
+mesh = SubResource("BoxMesh_floor")
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1047536568]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("1_35hqx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=368198505]
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=731000692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="Cube" type="RigidBody3D" parent="." unique_id=868219523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -5)
+mass = 2.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube" unique_id=2058611283]
+shape = SubResource("BoxShape3D_cube")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube" unique_id=173117360]
+mesh = SubResource("BoxMesh_cube")
+
+[node name="MonitorStaticBody3D" type="StaticBody3D" parent="." unique_id=1657549956]
+transform = Transform3D(-1.57361e-08, 0, -0.36, 0, 0.36, 0, 0.36, 0, -1.57361e-08, 5.353, 0.6842809, 10)
+physics_material_override = SubResource("PhysicsMaterial_is7kp")
+
+[node name="MonitorSketchfab_Scene" parent="MonitorStaticBody3D" unique_id=1609163420 instance=ExtResource("4_unsly")]
+transform = Transform3D(1, 0, 3.5527137e-15, 0, 1, 0, -3.5527137e-15, 0, 1, 0, 0, -0.019442558)
+
+[node name="MonitorCollisionShape3D" type="CollisionShape3D" parent="MonitorStaticBody3D" unique_id=808279361]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.13645, -2.0356)
+shape = SubResource("BoxShape3D_unsly")
+
+[node name="TerminalViewport" type="SubViewport" parent="MonitorStaticBody3D" unique_id=123456789]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(1350, 732)
+
+[node name="CodeEdit" type="CodeEdit" parent="MonitorStaticBody3D/TerminalViewport" unique_id=598306687]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.2, 1, 0.2, 1)
+theme_override_colors/background_color = Color(0.02, 0, 0.05, 0.95)
+theme_override_font_sizes/font_size = 32
+
+[node name="TerminalSprite" type="Sprite3D" parent="MonitorStaticBody3D" unique_id=987654321]
+transform = Transform3D(-1, 0, -8.7422805e-08, 0, 1, 0, 8.7422805e-08, 0, -1, 0, 4.2361007, -0.77608776)
+flip_h = true
+texture = SubResource("ViewportTexture_term")
+
+[node name="ScreenArea3D" type="Area3D" parent="MonitorStaticBody3D" unique_id=777888999]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.2361, -0.79)
+script = ExtResource("5_screen_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MonitorStaticBody3D/ScreenArea3D" unique_id=777888000]
+shape = SubResource("BoxShape3D_screen")

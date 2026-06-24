@@ -1,0 +1,24 @@
+{
+  "name": "vm-test",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsup",
+    "start": "node dist/index.cjs",
+    "dev": "tsup --watch --onSuccess \"node dist/index.cjs\""
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "v86": "^0.5.373"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
